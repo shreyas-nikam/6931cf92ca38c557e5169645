@@ -6,3 +6,4 @@ matplotlib
 seaborn
 Faker
 plotly_express
+tabulate

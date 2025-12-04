@@ -4,7 +4,8 @@ import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import update_risk_status # Import for the demonstration part
+from utils import update_risk_status  # Import for the demonstration part
+
 
 def main():
     st.title("AI Risk Dashboard")
@@ -22,13 +23,16 @@ def main():
     st.markdown("""
     Understanding the distribution of risks across different categories is fundamental for targeted risk management. This visualization provides a clear overview of which AI risk dimensions (Data, Model, System, Human, Organizational) are most prevalent in our register, guiding your focus.
     """)
+    category_counts = df["Risk_Category"].value_counts().reset_index()
+    category_counts.columns = ["Risk_Category", "count"]
     fig_category = px.bar(
-        df["Risk_Category"].value_counts().reset_index(),
-        x="index", y="Risk_Category", title="Distribution of Risks by Category",
-        labels={"index": "Risk Category", "Risk_Category": "Number of Risks"},
+        category_counts,
+        x="Risk_Category", y="count", title="Distribution of Risks by Category",
+        labels={"Risk_Category": "Risk Category", "count": "Number of Risks"},
         color_discrete_sequence=px.colors.qualitative.Pastel
     )
-    fig_category.update_layout(xaxis_title_text="Risk Category", yaxis_title_text="Number of Risks")
+    fig_category.update_layout(
+        xaxis_title_text="Risk Category", yaxis_title_text="Number of Risks")
     st.plotly_chart(fig_category, use_container_width=True)
 
     st.divider()
@@ -50,7 +54,7 @@ def main():
         title="Heatmap of Likelihood vs. Impact",
         labels=dict(x="Likelihood", y="Impact", color="Count"),
         x=["Low", "Medium", "High"],
-        y=["High", "Medium", "Low"], # Reverse y-axis for intuitive display
+        y=["High", "Medium", "Low"],  # Reverse y-axis for intuitive display
         color_continuous_scale="YlGnBu"
     )
     fig_heatmap.update_xaxes(side="top")
@@ -85,10 +89,12 @@ def main():
         df,
         x="NIST_AI_RMF_Function", color="Risk_Category", barmode="group",
         title="Distribution of Risks Across NIST AI RMF Functions by Category",
-        labels={"NIST_AI_RMF_Function": "NIST AI RMF Function", "count": "Number of Risks"},
+        labels={"NIST_AI_RMF_Function": "NIST AI RMF Function",
+                "count": "Number of Risks"},
         color_discrete_sequence=px.colors.qualitative.Bold
     )
-    fig_nist.update_layout(xaxis_title_text="NIST AI RMF Function", yaxis_title_text="Number of Risks")
+    fig_nist.update_layout(
+        xaxis_title_text="NIST AI RMF Function", yaxis_title_text="Number of Risks")
     st.plotly_chart(fig_nist, use_container_width=True)
 
     st.divider()
@@ -101,10 +107,12 @@ def main():
         df,
         x="SR_11_7_Pillar", color="Risk_Category", barmode="group",
         title="Distribution of Risks Across SR 11-7 Pillars by Category",
-        labels={"SR_11_7_Pillar": "SR 11-7 Pillar", "count": "Number of Risks"},
+        labels={"SR_11_7_Pillar": "SR 11-7 Pillar",
+                "count": "Number of Risks"},
         color_discrete_sequence=px.colors.qualitative.Dark24
     )
-    fig_sr11_7.update_layout(xaxis_title_text="SR 11-7 Pillar", yaxis_title_text="Number of Risks")
+    fig_sr11_7.update_layout(
+        xaxis_title_text="SR 11-7 Pillar", yaxis_title_text="Number of Risks")
     st.plotly_chart(fig_sr11_7, use_container_width=True)
 
     st.divider()
@@ -115,12 +123,15 @@ def main():
     """)
     if not df.empty:
         risk_ids_for_status_update = df["Risk_ID"].unique().tolist()
-        selected_risk_id_status = st.selectbox("Select Risk ID to update status (for demonstration)", risk_ids_for_status_update, key="dash_update_risk_id_status")
-        new_status_input = st.selectbox("New Status (for demonstration)", ["Identified", "In Progress", "Mitigated", "Monitored"], key="dash_new_status_input")
+        selected_risk_id_status = st.selectbox(
+            "Select Risk ID to update status (for demonstration)", risk_ids_for_status_update, key="dash_update_risk_id_status")
+        new_status_input = st.selectbox("New Status (for demonstration)", [
+                                        "Identified", "In Progress", "Mitigated", "Monitored"], key="dash_new_status_input")
 
         if st.button("Update Risk Status (Demonstration)", key="dash_update_status_button"):
             # Call the utility function to update status
-            st.session_state.ai_risk_register_df = update_risk_status(st.session_state.ai_risk_register_df, selected_risk_id_status, new_status_input)
-            st.rerun() # Rerun to update the dashboard visualizations
+            st.session_state.ai_risk_register_df = update_risk_status(
+                st.session_state.ai_risk_register_df, selected_risk_id_status, new_status_input)
+            st.rerun()  # Rerun to update the dashboard visualizations
     else:
         st.info("No risks in the register to update status for demonstration purposes.")

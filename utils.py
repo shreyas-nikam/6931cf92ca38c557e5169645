@@ -9,6 +9,7 @@ import plotly.express as px
 # Initialize session state for the DataFrame if it doesn't exist
 # This will be handled in app.py or the first page that uses it to ensure proper Streamlit lifecycle management.
 
+
 def generate_synthetic_risk_data(num_risks):
     """
     Generates a synthetic AI Model Risk Register DataFrame.
@@ -25,7 +26,8 @@ def generate_synthetic_risk_data(num_risks):
     likelihood_options = ["Low", "Medium", "High"]
     impact_options = ["Low", "Medium", "High"]
     nist_rmf_functions = ["Govern", "Map", "Measure", "Manage"]
-    sr_11_7_pillars = ["Development/Implementation", "Validation", "Governance", "Ongoing Monitoring"]
+    sr_11_7_pillars = ["Development/Implementation",
+                       "Validation", "Governance", "Ongoing Monitoring"]
     status_options = ["Identified", "In Progress", "Mitigated", "Monitored"]
 
     data = []
@@ -76,6 +78,7 @@ def generate_synthetic_risk_data(num_risks):
     df = pd.DataFrame(data)
     return df
 
+
 def calculate_risk_priority_score(df_register):
     """
     Calculates the Risk_Priority_Score for each risk in the DataFrame.
@@ -94,6 +97,7 @@ def calculate_risk_priority_score(df_register):
 
     return numeric_likelihood * numeric_impact
 
+
 def update_risk_status(df_register, risk_id, new_status):
     """
     Updates the 'Status' of a specific risk in the AI Risk Register.
@@ -108,17 +112,21 @@ def update_risk_status(df_register, risk_id, new_status):
     """
     valid_statuses = ["Identified", "In Progress", "Mitigated", "Monitored"]
     if new_status not in valid_statuses:
-        st.error(f"Error: Invalid status '{new_status}'. Valid statuses are: {\', \'.join(valid_statuses)}")
+        st.error(
+            f"Error: Invalid status '{new_status}'. Valid statuses are: {', '.join(valid_statuses)}")
         return df_register
 
     if risk_id not in df_register["Risk_ID"].values:
         st.error(f"Error: Risk with ID {risk_id} not found.")
         return df_register
 
-    old_status = df_register.loc[df_register["Risk_ID"] == risk_id, "Status"].iloc[0]
+    old_status = df_register.loc[df_register["Risk_ID"]
+                                 == risk_id, "Status"].iloc[0]
     df_register.loc[df_register["Risk_ID"] == risk_id, "Status"] = new_status
-    st.success(f"Risk ID {risk_id} status updated from '{old_status}' to '{new_status}'.")
+    st.success(
+        f"Risk ID {risk_id} status updated from '{old_status}' to '{new_status}'.")
     return df_register
+
 
 def generate_risk_report(df_register):
     """
@@ -132,15 +140,19 @@ def generate_risk_report(df_register):
     """
     report = []
     report.append("# AI Model Risk Register Report\n")
-    report.append(f"**Date Generated**: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-    report.append(f"**Total Number of Risks Identified**: {len(df_register)}\n\n")
+    report.append(
+        f"**Date Generated**: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    report.append(
+        f"**Total Number of Risks Identified**: {len(df_register)}\n\n")
 
     report.append("## 1. Risk Summary by Category\n")
-    risk_category_summary = df_register["Risk_Category"].value_counts().to_string()
+    risk_category_summary = df_register["Risk_Category"].value_counts(
+    ).to_string()
     report.append(f"```\n{risk_category_summary}\n```\n\n")
 
     report.append("## 2. Risk Summary by Priority Score\n")
-    risk_priority_summary = df_register["Risk_Priority_Score"].value_counts().sort_index().to_string()
+    risk_priority_summary = df_register["Risk_Priority_Score"].value_counts(
+    ).sort_index().to_string()
     report.append(f"```\n{risk_priority_summary}\n```\n\n")
 
     report.append("## 3. Risk Status Overview\n")
@@ -148,17 +160,21 @@ def generate_risk_report(df_register):
     report.append(f"```\n{risk_status_summary}\n```\n\n")
 
     report.append("## 4. Top 5 High Priority Risks\n")
-    top_risks = df_register.sort_values(by="Risk_Priority_Score", ascending=False).head(5)
-    report.append(top_risks[['Risk_ID', 'Risk_Description', 'Risk_Category', 'Likelihood', 'Impact', 'Risk_Priority_Score', 'Status']].to_markdown(index=False))
+    top_risks = df_register.sort_values(
+        by="Risk_Priority_Score", ascending=False).head(5)
+    report.append(top_risks[['Risk_ID', 'Risk_Description', 'Risk_Category', 'Likelihood',
+                  'Impact', 'Risk_Priority_Score', 'Status']].to_markdown(index=False))
     report.append("\n\n")
 
-    report.append("## 5. Full AI Risk Register (first 10 entries for brevity)\n")
+    report.append(
+        "## 5. Full AI Risk Register (first 10 entries for brevity)\n")
     report.append(df_register.head(10).to_markdown(index=False))
     report.append("\n\n")
 
     report.append("## 6. Adherence to Frameworks (NIST AI RMF & SR 11-7)\n")
     report.append("### NIST AI RMF Function Distribution:\n")
-    nist_rmf_summary = df_register["NIST_AI_RMF_Function"].value_counts().to_string()
+    nist_rmf_summary = df_register["NIST_AI_RMF_Function"].value_counts(
+    ).to_string()
     report.append(f"```\n{nist_rmf_summary}\n```\n\n")
 
     report.append("### SR 11-7 Pillar Distribution:\n")
@@ -166,6 +182,3 @@ def generate_risk_report(df_register):
     report.append(f"```\n{sr_11_7_summary}\n```\n\n")
 
     return "\n".join(report)
-
-
-
