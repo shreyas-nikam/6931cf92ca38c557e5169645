@@ -1,1 +1,58 @@
-# Starter Python file
+
+import streamlit as st
+import pandas as pd
+# No need to import utils functions directly here, as pages will import them.
+
+st.set_page_config(page_title="QuLab: AI Risk & Assurance", layout="wide")
+st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
+st.sidebar.divider()
+st.title("QuLab: AI Risk & Assurance Lab")
+st.divider()
+
+st.markdown("""
+As a **Risk Manager** or **Financial Data Engineer**, your role is critical in ensuring the responsible and compliant deployment of Artificial Intelligence (AI) systems within your organization, especially in regulated environments. This interactive application, **QuLab: AI Risk & Assurance Lab**, guides you through an end-to-end workflow for managing AI model risks, from identification and assessment to mitigation planning and continuous monitoring.
+
+You will step through a scenario where you:
+1.  **Understand foundational concepts** of AI risk, including established frameworks like SR 11-7 and the NIST AI Risk Management Framework, and a structured AI Risk Taxonomy.
+2.  **Establish and manage an AI Risk Register**, simulating real-world data to identify, assess, and prioritize risks.
+3.  **Visualize the AI risk landscape** to gain insights into risk distribution, severity, and alignment with regulatory functions.
+4.  **Explore conceptual assurance artifacts** like Model Cards and Data Cards, crucial for transparency and accountability.
+5.  **Generate comprehensive risk reports** for stakeholders, demonstrating proactive risk management and compliance.
+
+Each section is designed to mirror actual tasks you would perform in your job, providing a practical, story-driven experience rather than just theoretical concepts. Use the sidebar navigation to move through the different stages of this critical AI risk management journey.
+""")
+
+# Initialize session state for the DataFrame if it doesn't exist
+# This ensures the DataFrame persists across page changes.
+if 'ai_risk_register_df' not in st.session_state:
+    st.session_state.ai_risk_register_df = pd.DataFrame(columns=[
+        "Risk_ID", "Risk_Description", "Risk_Category", "Likelihood", "Impact",
+        "Mitigation_Controls", "Response_Plan", "NIST_AI_RMF_Function",
+        "SR_11_7_Pillar", "Responsible_Party", "Status", "Risk_Priority_Score"
+    ])
+    st.info("AI Risk Register initialized. Navigate to 'Home' to generate synthetic data or add risks.")
+
+
+page = st.sidebar.selectbox(label="Navigation", options=[
+    "Home",
+    "AI Risk Register",
+    "Risk Dashboard",
+    "Assurance Artifacts",
+    "Risk Report"
+])
+
+if page == "Home":
+    from application_pages.page_1_home import main
+    main()
+elif page == "AI Risk Register":
+    from application_pages.page_2_risk_register import main
+    main()
+elif page == "Risk Dashboard":
+    from application_pages.page_3_risk_dashboard import main
+    main()
+elif page == "Assurance Artifacts":
+    from application_pages.page_4_assurance_artifacts import main
+    main()
+elif page == "Risk Report":
+    from application_pages.page_5_risk_report import main
+    main()
