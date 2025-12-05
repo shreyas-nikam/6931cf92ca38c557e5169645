@@ -6,11 +6,12 @@ import seaborn as sns
 
 # Initialize session state variables if they don't exist
 if 'current_sidebar_page_index' not in st.session_state:
-    st.session_state.current_sidebar_page_index = 0 # Corresponds to the index in the sidebar selectbox
+    # Corresponds to the index in the sidebar selectbox
+    st.session_state.current_sidebar_page_index = 0
 if 'risk_register_df' not in st.session_state:
     st.session_state.risk_register_df = pd.DataFrame(columns=[
-        "Risk ID", "Dimension", "Category", "Description", 
-        "Potential Impact", "Likelihood", "Risk Score", 
+        "Risk ID", "Dimension", "Category", "Description",
+        "Potential Impact", "Likelihood", "Risk Score",
         "Mitigation Strategy", "Responsible Party", "Status"
     ])
 if 'next_risk_id' not in st.session_state:
@@ -52,6 +53,7 @@ if 'credit_risk_model_card' not in st.session_state:
         "Developer": None,
         "Last Review Date": None
     }
+
     def populate_model_card(model_metadata, auc_score, precision_at_recall_90):
         model_card = model_card_template.copy()
         model_card["Model Name"] = model_metadata["Name"]
@@ -118,6 +120,7 @@ if 'credit_data_card' not in st.session_state:
         "Preprocessing Steps": [],
         "Last Update Date": None
     }
+
     def populate_data_card(dataset_name, source, collection_method, size, features_desc, sensitive_features, potential_biases, preprocessing_steps):
         data_card = data_card_template.copy()
         data_card["Dataset Name"] = dataset_name
@@ -130,7 +133,8 @@ if 'credit_data_card' not in st.session_state:
         data_card["Preprocessing Steps"] = preprocessing_steps
         data_card["Last Update Date"] = "2024-03-10"
         return data_card
-    st.session_state.credit_data_card = populate_data_card(**st.session_state.synthetic_dataset_details)
+    st.session_state.credit_data_card = populate_data_card(
+        **st.session_state.synthetic_dataset_details)
 
 
 # --- Helper functions for navigation (to be called from pages) ---
@@ -139,6 +143,7 @@ def go_to_page(page_index):
     st.rerun()
 
 # --- Core Functions from Notebook ---
+
 
 def add_risk_to_register(dimension, category, description, potential_impact="Medium", likelihood="Medium"):
     impact_map = {"Low": 1, "Medium": 2, "High": 3}
@@ -160,9 +165,11 @@ def add_risk_to_register(dimension, category, description, potential_impact="Med
         "Responsible Party": "TBD",
         "Status": "Identified"
     }
-    st.session_state.risk_register_df = pd.concat([st.session_state.risk_register_df, pd.DataFrame([new_risk])], ignore_index=True)
+    st.session_state.risk_register_df = pd.concat(
+        [st.session_state.risk_register_df, pd.DataFrame([new_risk])], ignore_index=True)
     st.session_state.next_risk_id += 1
     st.success(f"Risk {new_risk['Risk ID']} added successfully!")
+
 
 def assess_risk_severity(risk_id, potential_impact, likelihood):
     impact_map = {"Low": 1, "Medium": 2, "High": 3}
@@ -171,32 +178,70 @@ def assess_risk_severity(risk_id, potential_impact, likelihood):
     idx = st.session_state.risk_register_df[st.session_state.risk_register_df["Risk ID"] == risk_id].index
     if not idx.empty:
         idx = idx[0]
-        st.session_state.risk_register_df.loc[idx, "Potential Impact"] = potential_impact
+        st.session_state.risk_register_df.loc[idx,
+                                              "Potential Impact"] = potential_impact
         st.session_state.risk_register_df.loc[idx, "Likelihood"] = likelihood
-        
+
         impact_score = impact_map.get(potential_impact, 0)
         likelihood_score = likelihood_map.get(likelihood, 0)
-        st.session_state.risk_register_df.loc[idx, "Risk Score"] = impact_score * likelihood_score
+        st.session_state.risk_register_df.loc[idx,
+                                              "Risk Score"] = impact_score * likelihood_score
         st.session_state.risk_register_df.loc[idx, "Status"] = "Assessed"
-        st.success(f"Risk {risk_id} updated with Impact: {potential_impact}, Likelihood: {likelihood}, Score: {impact_score * likelihood_score}")
+        st.success(
+            f"Risk {risk_id} updated with Impact: {potential_impact}, Likelihood: {likelihood}, Score: {impact_score * likelihood_score}")
     else:
         st.error(f"Risk ID {risk_id} not found.")
 
+
 def plot_risk_matrix(risk_df):
+    import numpy as np
+
     impact_order = ["Low", "Medium", "High"]
     likelihood_order = ["Low", "Medium", "High"]
-    
+
     risk_df_plot = risk_df.copy()
     # Filter out risks that haven't been assessed (Risk Score 0 if not assessed properly)
-    risk_df_plot = risk_df_plot[risk_df_plot['Risk Score'] > 0] 
+    risk_df_plot = risk_df_plot[risk_df_plot['Risk Score'] > 0]
 
     if risk_df_plot.empty:
-        st.info("No assessed risks to display in the matrix yet. Please assess some risks first.")
+        st.info(
+            "No assessed risks to display in the matrix yet. Please assess some risks first.")
         return
 
     # Map qualitative ratings to numerical for plotting
-    risk_df_plot["Impact_Num"] = risk_df_plot["Potential Impact"].map(lambda x: impact_order.index(x) + 0.5)
-    risk_df_plot["Likelihood_Num"] = risk_df_plot["Likelihood"].map(lambda x: likelihood_order.index(x) + 0.5)
+    risk_df_plot["Impact_Num"] = risk_df_plot["Potential Impact"].map(
+        lambda x: impact_order.index(x) + 0.5)
+    risk_df_plot["Likelihood_Num"] = risk_df_plot["Likelihood"].map(
+        lambda x: likelihood_order.index(x) + 0.5)
+
+    # Add uniform spread to prevent overlapping points
+    # Initialize offset columns
+    risk_df_plot["offset_x"] = 0.0
+    risk_df_plot["offset_y"] = 0.0
+
+    # Group by same coordinates and spread them in a circular pattern
+    grouped = risk_df_plot.groupby(
+        ['Likelihood_Num', 'Impact_Num'], sort=False)
+
+    for (lik, imp), group in grouped:
+        n_points = len(group)
+        if n_points > 1:
+            # Distribute points uniformly in a circle
+            radius = 0.2  # Maximum offset from center
+            angles = np.linspace(0, 2 * np.pi, n_points, endpoint=False)
+            offsets_x = radius * np.cos(angles)
+            offsets_y = radius * np.sin(angles)
+
+            # Assign offsets to the correct indices
+            for i, idx in enumerate(group.index):
+                risk_df_plot.loc[idx, "offset_x"] = offsets_x[i]
+                risk_df_plot.loc[idx, "offset_y"] = offsets_y[i]
+
+    # Apply offsets
+    risk_df_plot["Likelihood_Num"] = risk_df_plot["Likelihood_Num"] + \
+        risk_df_plot["offset_x"]
+    risk_df_plot["Impact_Num"] = risk_df_plot["Impact_Num"] + \
+        risk_df_plot["offset_y"]
 
     fig, ax = plt.subplots(figsize=(10, 8))
     sns.scatterplot(
@@ -219,7 +264,8 @@ def plot_risk_matrix(risk_df):
 
     # Add background colors for risk levels
     # High Risk (Red)
-    ax.axvspan(2, 3, ymin=2/3, ymax=1, color='red', alpha=0.15, label='High Risk')
+    ax.axvspan(2, 3, ymin=2/3, ymax=1, color='red',
+               alpha=0.15, label='High Risk')
     # Medium-High Risk (Orange)
     ax.axvspan(2, 3, ymin=1/3, ymax=2/3, color='orange', alpha=0.15)
     ax.axvspan(1, 2, ymin=2/3, ymax=1, color='orange', alpha=0.15)
@@ -231,8 +277,8 @@ def plot_risk_matrix(risk_df):
     ax.axvspan(1, 2, ymin=0, ymax=1/3, color='green', alpha=0.15)
     ax.axvspan(0, 1, ymin=1/3, ymax=2/3, color='green', alpha=0.15)
     # Low Risk (Light Green)
-    ax.axvspan(0, 1, ymin=0, ymax=1/3, color='lightgreen', alpha=0.15, label='Low Risk')
-
+    ax.axvspan(0, 1, ymin=0, ymax=1/3, color='lightgreen',
+               alpha=0.15, label='Low Risk')
 
     ax.set_xticks([0.5, 1.5, 2.5])
     ax.set_xticklabels(likelihood_order)
@@ -241,26 +287,32 @@ def plot_risk_matrix(risk_df):
     ax.set_xlabel("Likelihood")
     ax.set_ylabel("Potential Impact")
     ax.set_title("AI Model Risk Matrix: Credit Risk Scoring Model")
-    
+
     # Annotate points with Risk ID
     for i, row in risk_df_plot.iterrows():
-        ax.annotate(row["Risk ID"], (row["Likelihood_Num"] + 0.1, row["Impact_Num"] + 0.1), fontsize=8)
+        ax.annotate(row["Risk ID"], (row["Likelihood_Num"] +
+                    0.1, row["Impact_Num"] + 0.1), fontsize=8)
 
-    ax.grid(False) # Remove default grid to avoid overlap with custom lines
+    ax.grid(False)  # Remove default grid to avoid overlap with custom lines
     ax.set_xlim(0, 3)
     ax.set_ylim(0, 3)
     st.pyplot(fig)
+
 
 def add_mitigation_strategy(risk_id, strategy_description, responsible_party):
     idx = st.session_state.risk_register_df[st.session_state.risk_register_df["Risk ID"] == risk_id].index
     if not idx.empty:
         idx = idx[0]
-        st.session_state.risk_register_df.loc[idx, "Mitigation Strategy"] = strategy_description
-        st.session_state.risk_register_df.loc[idx, "Responsible Party"] = responsible_party
-        st.session_state.risk_register_df.loc[idx, "Status"] = "Mitigation Proposed"
+        st.session_state.risk_register_df.loc[idx,
+                                              "Mitigation Strategy"] = strategy_description
+        st.session_state.risk_register_df.loc[idx,
+                                              "Responsible Party"] = responsible_party
+        st.session_state.risk_register_df.loc[idx,
+                                              "Status"] = "Mitigation Proposed"
         st.success(f"Mitigation strategy added for Risk {risk_id}.")
     else:
         st.error(f"Risk ID {risk_id} not found.")
+
 
 def generate_risk_register_report(risk_df):
     final_columns = [
@@ -268,11 +320,12 @@ def generate_risk_register_report(risk_df):
         "Potential Impact", "Likelihood", "Risk Score",
         "Mitigation Strategy", "Responsible Party", "Status"
     ]
-    
+
     report_df = risk_df[final_columns].copy()
     report_df = report_df.sort_values(by="Risk Score", ascending=False)
     report_df.reset_index(drop=True, inplace=True)
     return report_df
+
 
 def plot_risk_distribution(risk_df):
     if risk_df.empty:
@@ -281,10 +334,10 @@ def plot_risk_distribution(risk_df):
 
     risk_counts_by_dimension = risk_df['Dimension'].value_counts()
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.barplot(x=risk_counts_by_dimension.index, y=risk_counts_by_dimension.values, palette='viridis', ax=ax)
+    sns.barplot(x=risk_counts_by_dimension.index,
+                y=risk_counts_by_dimension.values, palette='viridis', ax=ax)
     ax.set_title('Distribution of Identified Risks Across AI Dimensions')
     ax.set_xlabel('AI Risk Dimension')
     ax.set_ylabel('Number of Risks')
     plt.xticks(rotation=45, ha='right')
     st.pyplot(fig)
-

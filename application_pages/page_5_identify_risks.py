@@ -5,7 +5,7 @@ from utils import add_risk_to_register, go_to_page  # Import the navigation help
 
 def main():
     st.header("5. AI Risk Register: Systematic Identification")
-    st.markdown("""---
+    st.markdown("""
     Now equipped with the model and data cards, and frameworks like SR 11-7 and NIST AI RMF, you begin the systematic identification of risks. You'll work through the five dimensions of the AI Risk Taxonomy: Data, Model, System, Human, and Organizational.
     """)
 

@@ -45,7 +45,6 @@ def main():
         st.info("No risks to assess yet. Please identify some risks first.")
 
     st.markdown("""
-    ---
     As a Risk Manager, you can refine the impact and likelihood for any risk based on your deeper analysis.
     """)
     if not st.session_state.risk_register_df.empty:
