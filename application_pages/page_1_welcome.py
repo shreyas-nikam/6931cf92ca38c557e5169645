@@ -1,6 +1,7 @@
 
 import streamlit as st
-from utils import go_to_page # Import the navigation helper
+from utils import go_to_page  # Import the navigation helper
+
 
 def main():
     st.title("AI Model Risk Assessment: Credit Risk Scoring Model")
@@ -16,8 +17,8 @@ def main():
     Where *Impact* refers to the severity of adverse outcomes (e.g., financial loss, reputational damage, regulatory penalties), and *Likelihood* refers to the probability of the adverse event occurring. Your job is to systematically identify potential failure points and quantify these two dimensions for the AI model.
     """)
 
-    st.markdown("---
-    As a Quant Analyst at QuantBank, this first step sets the stage for a crucial task: ensuring the new AI Credit Risk Model is safe and compliant. Understanding the core concept that risk is a product of impact and likelihood is fundamental to your role, as it guides all subsequent assessments and prioritizations. This narrative introduces the stakes involved and the basic formula that will underpin your entire workflow.")
+    st.markdown("""As a Quant Analyst at QuantBank, this first step sets the stage for a crucial task: ensuring the new AI Credit Risk Model is safe and compliant. Understanding the core concept that risk is a product of impact and likelihood is fundamental to your role, as it guides all subsequent assessments and prioritizations. This narrative introduces the stakes involved and the basic formula that will underpin your entire workflow.""")
 
     if st.button("Start Assessment", key="start_assessment_btn"):
-        go_to_page(1) # Navigate to the next page (index 1 for "Model Overview & Card")
+        # Navigate to the next page (index 1 for "Model Overview & Card")
+        go_to_page(1)
