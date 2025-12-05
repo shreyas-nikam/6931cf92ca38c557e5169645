@@ -35,7 +35,6 @@ page_selection = st.sidebar.selectbox(
     label="Navigation",
     options=pages,
     index=st.session_state.current_sidebar_page_index,
-    key="sidebar_navigation"
 )
 
 # Update session state if sidebar selection changes
