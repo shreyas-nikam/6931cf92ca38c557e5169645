@@ -1,308 +1,206 @@
 id: 6931cf92ca38c557e5169645_user_guide
-summary: Lab 1: Principles of AI Risk and Assurance - Clone User Guide
+summary: AI Design and Deployment Lab 1 - Clone User Guide
 feedback link: https://docs.google.com/forms/d/e/1FAIpQLSfWkOK-in_bMMoHSZfcIvAeO58PAH9wrDqcxnJABHaxiDqhSA/viewform?usp=sf_link
 environments: Web
 status: Published
-# QuLab: AI Risk & Assurance Lab User Guide
-## 1. Introduction to AI Risk Management and Application Setup
-Duration: 0:08:00
+# Navigating AI Risk: A QuantBank Codelab for Responsible AI
 
-Welcome to the **QuLab: AI Risk & Assurance Lab**! This interactive application is designed to provide you, whether a **Risk Manager** or **Financial Data Engineer**, with a hands-on experience in managing AI model risks in a responsible and compliant manner, especially within regulated environments.
+## 1. Setting the Scene: Your Role as a Quant Analyst
+Duration: 00:05:00
 
-<aside class="positive">
-This lab provides a practical guide for identifying, assessing, and managing risks associated with Artificial Intelligence (AI) models. It's designed for risk managers, data engineers, and compliance officers who need to ensure the responsible deployment and continuous assurance of AI systems in regulated environments, such as financial institutions.
-</aside>
-
-In this lab, you will navigate through a simulated scenario to:
-*   **Understand foundational concepts** of AI risk, including established frameworks like SR 11-7 and the NIST AI Risk Management Framework, and a structured AI Risk Taxonomy.
-*   **Establish and manage an AI Risk Register**, simulating real-world data to identify, assess, and prioritize risks.
-*   **Visualize the AI risk landscape** to gain insights into risk distribution, severity, and alignment with regulatory functions.
-*   **Explore conceptual assurance artifacts** like Model Cards and Data Cards, crucial for transparency and accountability.
-*   **Generate comprehensive risk reports** for stakeholders, demonstrating proactive risk management and compliance.
-
-Each section is designed to mirror actual tasks you would perform in your job, providing a practical, story-driven experience rather than just theoretical concepts.
-
-### Navigating the Application
-
-The application is built using Streamlit and organized into several pages, accessible via the **sidebar navigation** on the left.
+Welcome to QuantBank! In this codelab, you step into the shoes of a Quantitative Analyst with a critical mission: to conduct a formal risk assessment of a new AI-powered Credit Risk Scoring Model. This model is designed to automate loan approvals and flag high-risk applicants, making its integrity and compliance paramount for the bank.
 
 <aside class="positive">
-<b>Important:</b> The application maintains an "AI Risk Register" in its memory (session state). This means any data you generate or add will persist as you navigate between pages. If you refresh the browser page, this data will be reset.
+<b>The Importance of AI Risk Management in Finance:</b> In the financial sector, AI models wield significant power over critical decisions. Ensuring these models are fair, accurate, and transparent is not just good practice; it's a regulatory imperative. Mismanaging AI risks can lead to financial losses, reputational damage, and severe regulatory penalties. This codelab will equip you with a systematic approach to identify and mitigate such risks.
 </aside>
 
-Before we dive into the functionalities, let's briefly touch upon the core concepts that underpin this lab:
+At the core of risk management lies a fundamental principle:
 
-#### AI Risk Management: Context and Foundational Frameworks
+$$ Risk = Impact \times Likelihood $$
 
-The increasing adoption of AI, particularly in high-stakes domains like finance, necessitates robust risk management practices. Traditional model risk management frameworks, such as SR 11-7, provide a strong foundation but must be extended to address the unique complexities and emergent risks introduced by AI systems (e.g., hallucinations in Large Language Models (LLMs), autonomy creep in agentic systems).
+Where *Impact* refers to the severity of adverse outcomes (e.g., financial loss, reputational damage), and *Likelihood* refers to the probability of that adverse event occurring. Your task is to systematically identify potential failure points in the AI model and quantify these two dimensions.
 
-*   **SR 11-7 (2011)**: This is a foundational U.S. guidance for model risk management in financial institutions. It defines model risk as the potential for adverse outcomes from incorrect or misused models and emphasizes effective challenge and robust governance across the model lifecycle.
-*   **NIST AI RMF 1.0 (2023)**: The National Institute of Standards and Technology (NIST) AI Risk Management Framework is a complementary and voluntary U.S. framework. It aims to promote trustworthy AI by improving the ability to incorporate trustworthiness considerations into AI product design, development, use, and evaluation. It outlines four core functions: **Govern, Map, Measure, Manage**.
+To begin your assessment, click the **Start Assessment** button. This will guide you to the next phase of understanding the AI model.
 
-These frameworks collectively provide a structured approach to identifying, assessing, mitigating, and monitoring AI-specific risks, ensuring both regulatory compliance and responsible AI deployment.
+## 2. Understanding the Credit Risk AI Model and Its Card
+Duration: 00:07:00
 
-#### AI Risk Taxonomy: A Multidimensional Approach
+Before you can assess risks, you must first thoroughly understand the AI model itself. This involves grasping its purpose, the algorithm it uses, and its operational environment. You've gathered initial details from the development team regarding the **Credit Risk Scoring Model**.
 
-A systematic classification of AI risks is crucial for comprehensive risk management. This lab categorizes risks across five critical dimensions, ensuring a holistic view across the entire AI lifecycle.
+The application now displays a **Hypothetical AI Model Scenario Details**, offering a concise overview of the model's fundamental characteristics. Pay attention to details like its type (`Supervised Learning, Classification`), algorithm (`Gradient Boosting Classifier`), and `Intended Use` (`Automate approval... flag high-risk applicants...`). This foundational understanding is crucial for establishing the scope of your risk assessment.
 
-1.  **Data Risks**: Pertain to the quality, provenance, relevance, and privacy of data used in AI systems. Examples include data drift, biased training data, and data privacy breaches.
-2.  **Model Risks**: Associated with the AI model itself, including its design, performance, and interpretability. Examples include algorithmic bias, low accuracy/reliability, and interpretability challenges (e.g., hallucinations in LLMs).
-3.  **System Risks**: Relate to the integration, architecture, and security of the AI system within broader IT infrastructure. Examples include integration flaws, architectural vulnerabilities, and API security issues.
-4.  **Human Risks**: Involve human interaction with AI, including misuse, over-reliance, and challenges in oversight. Examples include misinterpretation of AI outputs and loss of human oversight.
-5.  **Organizational Risks**: Encompass governance, policy, and cultural factors within the organization that impact AI risk management. Examples include lack of clear AI governance and insufficient ethical guidelines.
+Next, you will create an 'AI Model Card' for this model. An AI Model Card is a vital document for transparency and accountability, summarizing key information such as:
 
-Understanding these dimensions allows for targeted identification and mitigation of risks throughout the AI system's lifecycle, from development to ongoing monitoring.
+*   **Model Name**: The official name of the AI model.
+*   **Purpose & Intended Use**: What the model is designed to do and how it will be deployed.
+*   **Algorithm**: The underlying machine learning technique.
+*   **Key Performance Metrics**: Important indicators like AUC and Precision@Recall, which show how well the model performs.
+*   **Known Limitations**: Crucial insights into potential weaknesses, biases, or scenarios where the model might not perform optimally.
+*   **Developer & Last Review Date**: Information about who built and validated the model.
 
-Now that you have context, let's begin using the application! Ensure you are on the **Home** page by selecting it from the sidebar.
-
-## 2. Generating and Understanding Your AI Risk Register
-Duration: 0:05:00
-
-On the **Home** page, you'll find an introductory overview of the lab's learning objectives and target audience, along with the foundational concepts we just covered. The core functionality on this page, as a risk manager, is to establish your initial AI Risk Register.
-
-### Generating Synthetic Data
-
-To simulate a real-world scenario without needing actual sensitive data, we will generate a synthetic dataset representing an AI Model Risk Register. This data will allow us to demonstrate the principles of AI risk management.
-
-1.  Locate the section titled **"Generating a Synthetic AI Risk Register"**.
-2.  You'll see a numeric input field: "Number of synthetic risks to generate:". You can adjust this number, but the default value of `30` is sufficient for demonstration.
-3.  Click the **"Generate Synthetic Data"** button.
+The application has automatically generated a **AI Model Card: Credit Risk Scoring Model** based on the scenario details. Review this card carefully.
 
 <aside class="positive">
-Upon clicking the button, the application will populate the AI Risk Register with the specified number of synthetic risks and calculate their initial priority scores. You will see a success message.
+<b>Why Model Cards Matter:</b> A well-structured Model Card provides a single source of truth about an AI model. For a Risk Manager, it immediately highlights crucial information like performance metrics (e.g., AUC: $0.85$, Precision@90%Recall: $0.60$) and, most importantly, proactively outlines "Known Limitations." These limitations will be central to your risk identification process, helping you anticipate where the model might fail or exhibit unintended behavior.
 </aside>
 
-### Initial Data Exploration
+Once you've reviewed the model overview and its card, proceed by clicking **Next: Data Card**.
 
-Once the data is generated, scroll down to the **"Initial Data Exploration"** section.
+## 3. Dissecting the Data for the Credit Risk Model and Its Card
+Duration: 00:07:00
 
-1.  You will see a table displaying the first few rows of your newly created AI Risk Register.
-2.  Below the table, it confirms the "Current number of risks in register".
+The integrity of any AI model is intrinsically linked to the quality and characteristics of the data it's trained on. As a Quantitative Analyst, you know that "garbage in, garbage out" applies rigorously to AI. Therefore, your next step is to examine and document the dataset used for the Credit Risk Scoring Model.
 
-This quick view helps you confirm that the data has been loaded and gives you a preliminary understanding of its structure and content.
+Similar to the Model Card, a 'Data Card' provides a comprehensive summary of the dataset. This document details:
 
-### Calculating Risk Priority Score
+*   **Dataset Name, Source, and Collection Method**: Where the data comes from and how it was compiled.
+*   **Size (rows, features)**: The scale of the dataset.
+*   **Features Description**: Explanations for each piece of information (e.g., 'Age', 'Income', 'CreditScore').
+*   **Sensitive Features**: Features that could potentially lead to biased outcomes (e.g., demographic data).
+*   **Potential Biases**: Pre-existing biases identified in the data that could be amplified by the model.
+*   **Preprocessing Steps**: How the data was cleaned and transformed before model training.
 
-Effective risk management requires prioritizing issues. The application automatically calculates a `Risk_Priority_Score` for each risk based on its assessed `Likelihood` and `Impact`. This score helps you focus resources on the most critical risks.
+The application now displays the **Data Card: Credit Application Data**. Take a moment to review this information.
 
-1.  Scroll down to the **"Calculating Risk Priority Score"** section.
-2.  The application explains the methodology: we use a simple multiplicative matrix approach, mapping `Low`, `Medium`, `High` to numerical values (1, 2, 3 respectively) for both Likelihood and Impact. The Priority Score ($S$) is then calculated as the product of these numerical values:
-    $$
-    S = \text{Likelihood}_{\text{numeric}} \times \text{Impact}_{\text{numeric}}
-    $$
-    The resulting score will range from 1 (Low Likelihood x Low Impact) to 9 (High Likelihood x High Impact).
-3.  A table illustrates the scoring matrix:
-    $$
-    \begin{pmatrix}
-    \textbf{Likelihood} / \textbf{Impact} & \textbf{Low (1)} & \textbf{Medium (2)} & \textbf{High (3)} \\
-    \textbf{Low (1)} & 1 & 2 & 3 \\
-    \textbf{Medium (2)} & 2 & 4 & 6 \\
-    \textbf{High (3)} & 3 & 6 & 9
-    \end{pmatrix}
-    $$
-4.  Below this explanation, you'll see a filtered view of your AI Risk Register, highlighting `Risk_ID`, `Risk_Description`, `Likelihood`, `Impact`, and the newly calculated `Risk_Priority_Score`.
+<aside class="negative">
+<b>Identifying Data Biases:</b> As a Risk Manager, the "Potential Biases" section is a critical area of focus. Note entries like "Historical lending bias" and "Underrepresentation." These are immediate red flags for fairness and ethical concerns. Similarly, "Missing Data" and "CreditScore Lag" highlight potential issues with data quality and reliability that could directly impact the model's accuracy. Documenting these aspects early is vital for a thorough risk assessment.
+</aside>
+
+After reviewing the Data Card, click **Next: AI Risk Frameworks** to move on to understanding the guiding principles for your assessment.
+
+## 4. Foundations: SR 11-7 & NIST AI RMF 1.0
+Duration: 00:08:00
+
+As a Quantitative Analyst in a financial institution, your risk assessment isn't conducted in a vacuum. It's grounded in established frameworks that guide model governance and trustworthy AI practices.
+
+### Foundations of Financial Model Risk: SR 11-7 in an AI Context
+
+**SR 11-7 (Supervisory Guidance on Model Risk Management)** is the bedrock for model governance in finance. While it predates modern AI, its core principles of Model Risk Management (MRM) are highly relevant. You must consider how SR 11-7's pillars—model development, implementation, validation, and governance—translate to AI systems. This conceptual mapping ensures that even novel AI models are subject to the same rigor and oversight as traditional financial models.
+
+<aside class="info">
+<b>Key Takeaway from SR 11-7:</b> Model risk, defined as adverse consequences from incorrect or misused model outputs, intensifies with greater model complexity, higher input uncertainty, broader extent of use, and larger potential impact. AI models often amplify these factors.
+</aside>
+
+### Embracing Trustworthy AI: The NIST AI RMF 1.0 Framework
+
+Beyond SR 11-7's financial focus, the **NIST AI Risk Management Framework (AI RMF 1.0)** provides a broader, cross-sector lens for managing AI risks and promoting trustworthy AI. This framework complements SR 11-7 by offering a structured approach to identifying, measuring, and managing the unique risks posed by AI systems across their entire lifecycle. You will leverage its taxonomy and attributes to ensure a comprehensive risk assessment.
+
+The NIST AI RMF categorizes trustworthiness attributes as follows:
+
+*   **Validity**: The AI system accurately performs its intended function.
+*   **Reliability**: Consistent and stable performance over time.
+*   **Safety**: Minimizing harm to individuals, society, or the environment.
+*   **Security**: Protecting AI systems from attacks and ensuring data integrity.
+*   **Transparency**: Understanding how AI systems arrive at outputs, often through interpretability.
+*   **Fairness**: Identifying and mitigating biases to ensure equitable outcomes.
+*   **Accountability**: Clear roles and policies for AI risk oversight.
+*   **Privacy-Preserving**: Addressing data sensitivity and integrating privacy by design.
+
+<aside class="info">
+<b>Why NIST AI RMF is Essential:</b> While SR 11-7 focuses on financial risk, NIST AI RMF expands your view to encompass broader societal and ethical concerns, such as Fairness, Transparency, and Accountability. Both frameworks are crucial for deploying AI responsibly.
+</aside>
+
+Understanding these frameworks provides you with the conceptual tools needed to systematically identify and categorize risks. Now, click **Next: Identify AI Risks** to start populating your risk register.
+
+## 5. AI Risk Register: Systematic Identification
+Duration: 00:10:00
+
+Now, equipped with the Model and Data Cards and guided by frameworks like SR 11-7 and NIST AI RMF, you begin the systematic identification of risks. You'll use a structured approach, working through key dimensions of AI risk.
+
+The application provides an "AI Risk Register" where you can log identified risks. Each risk entry includes:
+
+*   **Risk ID**: A unique identifier.
+*   **Dimension**: The category of AI risk (e.g., Data, Model, System, Human, Organizational). This helps classify where the risk originates.
+*   **Category**: A more specific type of risk within the dimension (e.g., Data Quality, Algorithmic Bias).
+*   **Description**: A detailed explanation of the risk, its potential cause, and its impact.
+*   **Potential Impact** and **Likelihood**: Initial qualitative assessments, which you'll refine later.
+
+The application allows you to "Pre-populate Initial Risks". Click this button to quickly add a comprehensive set of common AI risks related to your Credit Risk Scoring Model scenario. This simulates a thorough initial brainstorming and identification process.
+
+After clicking the button, you'll see the **Current AI Risk Register** populated with numerous risks. Review this table to understand the types of risks identified across the different dimensions.
 
 <aside class="positive">
-This step is crucial as it demonstrates how quantitative measures are applied to qualitative assessments, providing a clear basis for prioritizing mitigation efforts.
+<b>The Value of Systematic Identification:</b> Systematically identifying risks across dimensions (Data, Model, System, Human, Organizational) ensures a holistic assessment. It prevents overlooking critical failure points and helps in building a comprehensive risk profile, which is a cornerstone of effective risk management.
 </aside>
 
-## 3. Managing the AI Risk Register
-Duration: 0:07:00
+You also have the option to "Manually Add a New Risk" using the expander section. If you think of a unique risk not covered by the pre-populated list, you can add it here. Select a `Dimension`, input a `Category` and `Description`, and assign initial `Potential Impact` and `Likelihood`.
 
-Now, navigate to the **"AI Risk Register"** page using the sidebar. This page is your central hub for actively managing the organization's AI risks. Here, you can add new risks, modify existing details, and update their mitigation status.
+Once you've reviewed the identified risks, click **Next: Assess Risk Severity** to proceed to the next stage.
 
-### Current AI Risk Register
+## 6. AI Risk Register: Severity Assessment
+Duration: 00:08:00
 
-At the top of the page, you'll see the full **"Current AI Risk Register"** displayed in an interactive table. You can sort columns, search for specific entries, and scroll through all the risks you've generated or added.
+With all potential risks identified, your next crucial step as a Risk Manager is to assess their severity. This involves assigning qualitative ratings for "Potential Impact" and "Likelihood" to each risk, typically as Low, Medium, or High. These ratings are then combined to calculate a numerical "Risk Score" using the formula $Risk = Impact \times Likelihood$.
+
+This process allows you to prioritize risks, focusing mitigation efforts on those with the highest scores.
+
+The application provides an "Auto-Assess Key Risks" button. Click this to automatically assign Impact and Likelihood ratings to the pre-populated risks and update their Risk Scores.
+
+After auto-assessing, the **AI Risk Register with Assessed Risks** will be displayed, sorted by "Risk Score" in descending order. This immediately highlights the highest-priority risks.
 
 <aside class="positive">
-Maintaining an accurate and up-to-date register is critical for effective AI risk governance.
+<b>Prioritization through Assessment:</b> As a Risk Manager, assigning Impact and Likelihood ratings is not merely a bureaucratic task. It's how you prioritize. High-scoring risks demand immediate attention and resources, ensuring that your mitigation efforts are strategically focused on the most significant threats to the AI model and the bank.
 </aside>
 
-### Add New Risk Entry
+The application also allows you to refine the impact and likelihood for any individual risk. Use the `Select Risk ID to Assess/Update` dropdown to choose a specific risk, and then adjust its `Potential Impact` and `Likelihood` using the respective select boxes. Click **Update Risk Severity** to apply your changes.
 
-When a new potential AI risk is identified, you need to document it thoroughly.
+Once you are satisfied with the risk assessments, click **Next: Visualize Risk Landscape** to see your risks in a graphical format.
 
-1.  Scroll down to the **"Add New Risk Entry"** section.
-2.  The application automatically suggests the `Next Risk ID`.
-3.  Fill in the details for the new risk using the provided input fields:
-    *   **Risk Description**: A brief explanation of the risk.
-    *   **Risk Category**: Select one of the five dimensions (Data, Model, System, Human, Organizational).
-    *   **Likelihood**: Assess the probability of the risk occurring (Low, Medium, High).
-    *   **Impact**: Assess the potential severity if the risk occurs (Low, Medium, High).
-    *   **Mitigation Controls**: Describe the measures in place or planned to reduce the risk.
-    *   **Response Plan**: Outline the actions to take if the risk materializes.
-    *   **NIST AI RMF Function**: Map the risk to one of the NIST AI RMF functions (Govern, Map, Measure, Manage).
-    *   **SR 11-7 Pillar**: Map the risk to one of the SR 11-7 pillars (Development/Implementation, Validation, Governance, Ongoing Monitoring).
-    *   **Responsible Party**: The individual or team accountable for this risk.
-    *   **Status**: Initial status (e.g., Identified).
-4.  Click the **"Add New Risk"** button.
+## 7. Visualizing the Risk Landscape: The AI Risk Matrix
+Duration: 00:07:00
+
+To effectively communicate the risk landscape to senior management and other stakeholders, a visual representation is essential. As a Risk Manager, you'll create a Risk Matrix, which plots each identified risk based on its assessed impact and likelihood.
+
+The application automatically generates an **AI Model Risk Matrix: Credit Risk Scoring Model**.
+
+*   The X-axis represents `Likelihood`.
+*   The Y-axis represents `Potential Impact`.
+*   Each point on the matrix represents an identified risk, labeled with its `Risk ID`.
+*   The color and size of the points can indicate the overall risk score.
+*   The matrix is typically divided into zones (e.g., green for low risk, yellow for medium, orange for medium-high, and red for high risk) to quickly convey severity.
 
 <aside class="positive">
-The new risk will be added to the register, and its `Risk_Priority_Score` will be automatically calculated. The page will reload, and you'll see your new entry in the main register table.
+<b>Interpreting the Risk Matrix:</b> This visual tool immediately highlights high-priority risks that fall into the "red" zone (High Impact, High Likelihood). You can quickly identify critical risks like R007 ("Model Robustness"), R014 ("Loss of Human Oversight"), and R016 ("Lack of Incident Response Plan") as top priorities. This visual summary is an invaluable tool for driving discussions with non-technical stakeholders and securing resources for mitigation.
 </aside>
 
-### Edit Existing Risk
+Review the matrix and identify the risks that fall into the higher-severity quadrants. These are the risks that will require the most attention for mitigation.
 
-As more information becomes available or as your understanding of a risk evolves, you'll need to update its details.
+When you are ready, click **Next: Develop Mitigation Strategies** to start planning how to address these risks.
 
-1.  Scroll to the **"Edit Existing Risk"** section.
-2.  Use the **"Select Risk ID to Edit"** dropdown to choose a specific risk from your register.
-3.  Once a `Risk_ID` is selected, its current details will populate the form fields below.
-4.  Make the necessary changes to any of the fields.
-5.  Click the **"Save Edited Risk"** button.
+## 8. AI Risk Register: Strategic Mitigation
+Duration: 00:10:00
+
+Identifying and assessing risks is only half the battle. As a Risk Manager, your next critical step is to propose concrete mitigation strategies and controls for the highest-priority risks. These strategies should align with NIST AI RMF's emphasis on control measures and SR 11-7's requirement for robust validation and governance.
+
+The application provides an "Auto-Populate Mitigations for Top Risks" button. Click this to automatically add example mitigation strategies and responsible parties for some of the highest-scoring risks. This gives you a starting point for how to approach mitigation planning.
+
+After auto-populating, the **AI Risk Register with Proposed Mitigations** will be displayed, showing the updated strategies and responsible parties.
 
 <aside class="positive">
-The application will update the selected risk's details, and its `Risk_Priority_Score` will be recalculated if Likelihood or Impact were changed. The main register table will reflect your updates.
+<b>Designing Effective Mitigations:</b> Mitigation strategies should be specific, actionable, and assigned to a responsible party. For example, for "Model Robustness" (R007), a strategy might involve "Implement continuous monitoring for concept drift." For "Loss of Human Oversight" (R014), it could be "Establish clear 'human-in-the-loop' checkpoints." These strategies transform identified risks into actionable plans.
 </aside>
 
-### Update Risk Status
+You can also add or update mitigation strategies for individual risks. Use the `Select Risk ID to Add/Update Mitigation` dropdown, then enter the `Mitigation Strategy Description` and the `Responsible Party`. Click **Add/Update Mitigation Strategy** to save your changes.
 
-Tracking the `Status` of identified risks is essential for monitoring mitigation progress.
+Take some time to review the proposed strategies. Once you're comfortable with the mitigation plans, click **Next: Generate Final Report**.
 
-1.  Scroll to the **"Update Risk Status"** section.
-2.  Use the **"Select Risk ID to update status"** dropdown to choose the risk you want to update.
-3.  Select the **"New Status"** from the dropdown (e.g., "In Progress," "Mitigated," "Monitored").
-4.  Click the **"Update Risk Status"** button.
+## 9. Comprehensive AI Risk Report
+Duration: 00:07:00
+
+The ultimate deliverable of your assessment is a comprehensive AI Risk Register. This living document consolidates all identified risks, their assessment (impact, likelihood, score), and the proposed mitigation strategies. As a Risk Manager, you understand that this register is crucial for ongoing monitoring, auditability, and demonstrating compliance. It serves as the single source of truth for the AI model's risk profile, empowering the organization to manage it effectively throughout its lifecycle.
+
+The application now displays the **Comprehensive AI Model Risk Register: Credit Risk Scoring Model**. This table represents the complete consolidated view of all your work, sorted by risk score.
+
+Additionally, a **Risk Distribution Across AI Dimensions** bar chart is generated. This visualization quickly shows which AI dimensions (e.g., Data, Model, Human) have the highest number of identified risks, offering a high-level overview of where the organization's primary AI risk exposure lies.
 
 <aside class="positive">
-The status of the chosen risk will be updated in the register. This functionality is crucial for keeping your risk posture current and for communicating progress to stakeholders.
+<b>The Final Report as a Living Document:</b> This comprehensive register is not a static document. It's a living tool for continuous risk management. It enables ongoing monitoring, facilitates audits, and provides the necessary documentation for the "Effective Challenge" process — a core requirement of SR 11-7. Your work ensures that QuantBank can deploy AI models with confidence and accountability.
 </aside>
 
-## 4. Visualizing the AI Risk Landscape
-Duration: 0:06:00
+### Concluding the Assessment: Preparing for Effective Challenge
 
-Navigate to the **"Risk Dashboard"** page using the sidebar. This dashboard provides a high-level, interactive overview of your AI risk landscape using various visualizations. These charts help you quickly identify patterns, concentrations of risk, and progress in mitigation efforts, enabling data-driven decisions.
+Your detailed AI Risk Register and associated artifacts (Model Card, Data Card) form the basis for the "Effective Challenge" process. This principle, central to SR 11-7, mandates that objective and informed reviewers critically test models to identify hidden errors, biases, or limitations. By systematically identifying risks, assessing their impact, and proposing mitigations, you've provided the necessary documentation for internal validation teams, auditors, and senior management to rigorously scrutinize the Credit Risk Scoring Model. Your work ensures that QuantBank can deploy AI models with confidence, upholding regulatory compliance and fostering trustworthiness in AI.
 
-<aside class="positive">
-If you haven't generated synthetic data or added risks, you'll see a warning. Please go back to the "Home" page to generate data first.
-</aside>
+This iterative process of identification, assessment, mitigation, and challenge is crucial for continuous improvement and adaptive governance in AI risk management.
 
-### Visualizing Risk Categories
-
-This bar chart shows the distribution of risks across the five main categories: Data, Model, System, Human, and Organizational.
-
-*   **Concept**: Understanding which categories have the most risks helps you allocate resources and focus mitigation strategies effectively. For example, if "Data Risks" are most prevalent, it suggests a need to strengthen data governance and quality assurance processes.
-*   **Interaction**: Observe the bars to see the number of risks in each category.
-
-### Visualizing Likelihood vs. Impact
-
-This is a heatmap that displays the concentration of risks based on their assessed probability (Likelihood) and potential severity (Impact).
-
-*   **Concept**: This matrix is a cornerstone of risk management. Risks falling into the "High Likelihood" and "High Impact" quadrant (top-right of the matrix) are the most critical and demand immediate attention.
-*   **Interaction**: The numbers in each cell indicate how many risks share that specific Likelihood/Impact combination. Darker cells represent a higher concentration of risks.
-
-### Visualizing Risk Status
-
-This pie chart provides a snapshot of the current status of all identified AI risks.
-
-*   **Concept**: It helps you quickly understand the proportion of risks that are still "Identified," "In Progress," "Mitigated," or "Monitored." This is vital for tracking the overall effectiveness of your risk management efforts.
-*   **Interaction**: Each slice of the pie represents a status, and its size corresponds to the number of risks in that status. Hover over slices for exact counts.
-
-### Mapping Risks to NIST AI RMF Functions
-
-This histogram shows how identified risks are distributed across the four core functions of the NIST AI RMF: Govern, Map, Measure, and Manage. The bars are also broken down by Risk Category.
-
-*   **Concept**: This visualization ensures that your AI risk management strategy aligns with the NIST framework. It helps you identify if certain functions (e.g., "Govern") have a disproportionate number of associated risks, indicating areas where framework adherence or implementation might need strengthening.
-    *   **Govern**: Fostering a culture of risk management.
-    *   **Map**: Identifying risks.
-    *   **Measure**: Evaluating and analyzing risks.
-    *   **Manage**: Acting to address risks.
-*   **Interaction**: Observe the height of the bars for each function. The stacked segments show the breakdown by risk category within each function.
-
-### Mapping Risks to SR 11-7 Pillars
-
-Similar to the NIST RMF chart, this histogram maps risks to the key pillars of SR 11-7: Development/Implementation, Validation, Governance, and Ongoing Monitoring.
-
-*   **Concept**: For financial institutions, this mapping is crucial for regulatory compliance. It helps ensure that AI risks are being addressed within the established model risk management framework, identifying potential gaps in coverage across the model lifecycle.
-*   **Interaction**: Similar to the NIST chart, the height of the bars shows total risks per pillar, with stacked segments indicating risk category distribution.
-
-### Updating Risk Status (Demonstration)
-
-At the bottom of the dashboard, you'll find a small section demonstrating the "Update Risk Status" functionality, similar to what's available on the "AI Risk Register" page.
-
-1.  Select a `Risk ID` from the dropdown.
-2.  Choose a `New Status`.
-3.  Click **"Update Risk Status (Demonstration)"**.
-
-<aside class="positive">
-Upon updating, the dashboard will automatically refresh, and you'll see the pie chart and other relevant visualizations update to reflect the change in risk status. This highlights the dynamic nature of the risk register and dashboard.
-</aside>
-
-## 5. Understanding AI Assurance Artifacts
-Duration: 0:04:00
-
-Navigate to the **"Assurance Artifacts"** page using the sidebar. This section introduces two critical documentation artifacts that enhance transparency, accountability, and explainability for AI systems: **Model Cards** and **Data Cards**. While the application doesn't generate these artifacts directly, it provides conceptual templates and guidance on their importance.
-
-### Model Cards
-
-Model Cards provide a comprehensive summary of an AI model's key facts, enhancing transparency and accountability. They are intended to document a model's performance, behavior, and intended use for various stakeholders, from technical teams to regulators.
-
-*   **Model Details**: Basic information like name, version, developer, and intended use.
-*   **Training Data Characteristics**: Description of the data used for training, including potential biases.
-*   **Performance Metrics**: Quantitative metrics (e.g., accuracy, precision, fairness) relevant to the model's performance.
-*   **Ethical Considerations**: Potential societal impacts, identified risks (linking to the Risk Register), and mitigation strategies.
-*   **Usage Guidelines**: Instructions for deployment, monitoring, and oversight.
-
-<aside class="positive">
-As a <b>Financial Data Engineer</b>, you would typically contribute the technical details of the model. As a <b>Risk Manager</b>, you would ensure ethical considerations and risks are adequately addressed and linked to the broader risk register.
-</aside>
-
-### Data Cards
-
-Data Cards are essential for documenting the provenance and characteristics of datasets used in AI. They ensure transparency around data collection, processing, and potential biases, which are critical for addressing data-related risks.
-
-*   **Dataset Overview**: Name, creator, purpose, and description of contents.
-*   **Data Collection Process**: How the data was gathered, preprocessed, and any privacy techniques used.
-*   **Data Characteristics**: Statistics, demographic information, potential biases, and limitations.
-*   **Data Provenance and Lineage**: Origin, transformation history, data rights, and licensing.
-*   **Maintenance and Updates**: Frequency of updates and responsible party for data stewardship.
-
-<aside class="positive">
-These artifacts are crucial for enabling "effective challenge" and supporting regulatory compliance by providing clear, auditable evidence of responsible AI development and deployment. They directly inform the `Data` and `Model` risk categories and are integral to the `Map` and `Measure` functions of the NIST AI RMF.
-</aside>
-
-## 6. Generating Comprehensive Risk Reports
-Duration: 0:03:00
-
-Finally, navigate to the **"Risk Report"** page using the sidebar. As a Risk Manager, periodically generating a comprehensive AI Risk Report is vital for communicating the organization's risk posture to senior leadership, board members, and regulators.
-
-<aside class="positive">
-If you haven't generated synthetic data or added risks, you'll see a warning. Please go back to the "Home" page to generate data first.
-</aside>
-
-### Generate Risk Report
-
-1.  Locate the section titled **"Generate Risk Report"**.
-2.  Click the **"Generate Comprehensive Risk Report"** button.
-
-<aside class="positive">
-The application will generate a detailed, Markdown-formatted report based on the current state of your AI Risk Register.
-</aside>
-
-The report will include several key sections:
-
-*   **Date Generated** and **Total Number of Risks Identified**.
-*   **Risk Summary by Category**: A count of risks for each category (Data, Model, System, Human, Organizational).
-*   **Risk Summary by Priority Score**: A distribution of risks by their calculated priority scores.
-*   **Risk Status Overview**: A count of risks for each status (Identified, In Progress, Mitigated, Monitored).
-*   **Top 5 High Priority Risks**: A table highlighting the most critical risks based on their priority score.
-*   **Full AI Risk Register (first 10 entries for brevity)**: A sample of the register to show detailed risk information.
-*   **Adherence to Frameworks (NIST AI RMF & SR 11-7)**: Summaries of how risks are distributed across the functions of the NIST AI RMF and the pillars of SR 11-7.
-
-<aside class="positive">
-This report provides an actionable overview that supports informed decision-making and demonstrates robust governance to stakeholders. You can copy this Markdown output to use in your documentation or presentations.
-</aside>
-
-### Conclusion
-
-This lab has guided you through the essential steps of establishing and managing an AI Model Risk Register, incorporating principles from SR 11-7 and the NIST AI Risk Management Framework. You've covered:
-
-*   **Understanding AI Risk Taxonomy**: Categorizing risks into Data, Model, System, Human, and Organizational dimensions.
-*   **Quantifying Risk Severity**: Calculating `Risk_Priority_Scores` based on `Likelihood` and `Impact`.
-*   **Visualizing Risk Landscape**: Using various charts to interpret risk distributions and priorities.
-*   **Tracking Mitigation Efforts**: Demonstrating how to update risk statuses dynamically.
-*   **Leveraging Assurance Artifacts**: Outlining the conceptual importance of Model Cards and Data Cards.
-*   **Generating Actionable Reports**: Creating a comprehensive summary for stakeholders.
-
-By applying these structured approaches, risk managers and data engineers can proactively identify, assess, mitigate, and monitor AI-specific risks, fostering trust, ensuring compliance, and supporting the responsible deployment of AI within their organizations. Continuous adaptation and monitoring are key to navigating the evolving landscape of AI risks.
+Congratulations on completing your AI Model Risk Assessment! If you wish to go through the process again, click **Restart Assessment**.
