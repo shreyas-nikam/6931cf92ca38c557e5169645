@@ -1,5 +1,6 @@
 
 import streamlit as st
+from utils import initialize_app_state
 from utils import go_to_page # Import the navigation helper
 
 st.set_page_config(page_title="QuLab", layout="wide")
@@ -7,6 +8,8 @@ st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
 st.sidebar.divider()
 st.title("QuLab")
 st.divider()
+
+initialize_app_state()
 
 st.markdown("""
 In this lab, you will step into the shoes of a Quantitative Analyst at QuantBank, tasked with a critical mission: to conduct a formal risk assessment of a new AI-powered Credit Risk Scoring Model. This model is poised to automate loan approvals and flag high-risk applicants, making its integrity and compliance paramount.

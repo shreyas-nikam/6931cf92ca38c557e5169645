@@ -4,137 +4,140 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Initialize session state variables if they don't exist
-if 'current_sidebar_page_index' not in st.session_state:
-    # Corresponds to the index in the sidebar selectbox
-    st.session_state.current_sidebar_page_index = 0
-if 'risk_register_df' not in st.session_state:
-    st.session_state.risk_register_df = pd.DataFrame(columns=[
-        "Risk ID", "Dimension", "Category", "Description",
-        "Potential Impact", "Likelihood", "Risk Score",
-        "Mitigation Strategy", "Responsible Party", "Status"
-    ])
-if 'next_risk_id' not in st.session_state:
-    st.session_state.next_risk_id = 1
 
-# --- Model Scenario and Card Initializations ---
-# These should ideally be initialized only once, so placing them in utils and checking session state is correct.
-if 'credit_risk_model_scenario' not in st.session_state:
-    def initialize_model_scenario_metadata():
-        model_metadata = {
-            "Name": "Credit Risk Scoring Model v1.0",
-            "Type": "Supervised Learning, Classification",
-            "Algorithm": "Gradient Boosting Classifier (e.g., LightGBM)",
-            "Purpose": "To predict the likelihood of loan default for retail loan applicants.",
-            "Intended_Use": "Automate approval for low-risk applicants and flag high-risk applicants for manual underwriting review.",
-            "Key_Inputs": ["Age", "Income", "LoanAmount", "CreditScore", "EmploymentStatus", "ResidentialStatus"],
-            "Output": "Probability of Default (0-1), Binary Decision (Approve/Reject)",
-            "Development_Team": "QuantBank Data Science Department",
-            "Deployment_Environment": "API integrated into legacy Loan Origination System",
-            "Regulatory_Context": "SR 11-7, potential for future AI-specific regulations"
+def initialize_app_state():
+    """Initialize session state variables for the app."""
+    # Initialize session state variables if they don't exist
+    if 'current_sidebar_page_index' not in st.session_state:
+        # Corresponds to the index in the sidebar selectbox
+        st.session_state.current_sidebar_page_index = 0
+    if 'risk_register_df' not in st.session_state:
+        st.session_state.risk_register_df = pd.DataFrame(columns=[
+            "Risk ID", "Dimension", "Category", "Description",
+            "Potential Impact", "Likelihood", "Risk Score",
+            "Mitigation Strategy", "Responsible Party", "Status"
+        ])
+    if 'next_risk_id' not in st.session_state:
+        st.session_state.next_risk_id = 1
+
+    # --- Model Scenario and Card Initializations ---
+    # These should ideally be initialized only once, so placing them in utils and checking session state is correct.
+    if 'credit_risk_model_scenario' not in st.session_state:
+        def initialize_model_scenario_metadata():
+            model_metadata = {
+                "Name": "Credit Risk Scoring Model v1.0",
+                "Type": "Supervised Learning, Classification",
+                "Algorithm": "Gradient Boosting Classifier (e.g., LightGBM)",
+                "Purpose": "To predict the likelihood of loan default for retail loan applicants.",
+                "Intended_Use": "Automate approval for low-risk applicants and flag high-risk applicants for manual underwriting review.",
+                "Key_Inputs": ["Age", "Income", "LoanAmount", "CreditScore", "EmploymentStatus", "ResidentialStatus"],
+                "Output": "Probability of Default (0-1), Binary Decision (Approve/Reject)",
+                "Development_Team": "QuantBank Data Science Department",
+                "Deployment_Environment": "API integrated into legacy Loan Origination System",
+                "Regulatory_Context": "SR 11-7, potential for future AI-specific regulations"
+            }
+            return model_metadata
+        st.session_state.credit_risk_model_scenario = initialize_model_scenario_metadata()
+
+    if 'hypothetical_auc' not in st.session_state:
+        st.session_state.hypothetical_auc = 0.85
+    if 'hypothetical_precision_at_recall' not in st.session_state:
+        st.session_state.hypothetical_precision_at_recall = 0.60
+
+    if 'credit_risk_model_card' not in st.session_state:
+        model_card_template = {
+            "Model Name": None,
+            "Version": None,
+            "Purpose": None,
+            "Intended Use": None,
+            "Algorithm": None,
+            "Key Performance Metrics": {},
+            "Known Limitations": [],
+            "Developer": None,
+            "Last Review Date": None
         }
-        return model_metadata
-    st.session_state.credit_risk_model_scenario = initialize_model_scenario_metadata()
 
-if 'hypothetical_auc' not in st.session_state:
-    st.session_state.hypothetical_auc = 0.85
-if 'hypothetical_precision_at_recall' not in st.session_state:
-    st.session_state.hypothetical_precision_at_recall = 0.60
+        def populate_model_card(model_metadata, auc_score, precision_at_recall_90):
+            model_card = model_card_template.copy()
+            model_card["Model Name"] = model_metadata["Name"]
+            model_card["Version"] = "1.0"
+            model_card["Purpose"] = model_metadata["Purpose"]
+            model_card["Intended Use"] = model_metadata["Intended_Use"]
+            model_card["Algorithm"] = model_metadata["Algorithm"]
+            model_card["Key Performance Metrics"] = {
+                "AUC": auc_score,
+                "Precision@90%Recall": precision_at_recall_90,
+                "Target Variable": "Defaulted (Binary: 1 for default, 0 for no default)"
+            }
+            model_card["Known Limitations"] = [
+                "Potential for disparate impact on certain demographic groups due to historical data biases.",
+                "Performance may degrade with significant shifts in economic conditions not present in training data.",
+                "Limited interpretability for individual predictions (black-box nature of Gradient Boosting)."
+            ]
+            model_card["Developer"] = model_metadata["Development_Team"]
+            model_card["Last Review Date"] = "2024-03-15"
+            return model_card
+        st.session_state.credit_risk_model_card = populate_model_card(
+            st.session_state.credit_risk_model_scenario,
+            st.session_state.hypothetical_auc,
+            st.session_state.hypothetical_precision_at_recall
+        )
 
-if 'credit_risk_model_card' not in st.session_state:
-    model_card_template = {
-        "Model Name": None,
-        "Version": None,
-        "Purpose": None,
-        "Intended Use": None,
-        "Algorithm": None,
-        "Key Performance Metrics": {},
-        "Known Limitations": [],
-        "Developer": None,
-        "Last Review Date": None
-    }
-
-    def populate_model_card(model_metadata, auc_score, precision_at_recall_90):
-        model_card = model_card_template.copy()
-        model_card["Model Name"] = model_metadata["Name"]
-        model_card["Version"] = "1.0"
-        model_card["Purpose"] = model_metadata["Purpose"]
-        model_card["Intended Use"] = model_metadata["Intended_Use"]
-        model_card["Algorithm"] = model_metadata["Algorithm"]
-        model_card["Key Performance Metrics"] = {
-            "AUC": auc_score,
-            "Precision@90%Recall": precision_at_recall_90,
-            "Target Variable": "Defaulted (Binary: 1 for default, 0 for no default)"
+    if 'synthetic_dataset_details' not in st.session_state:
+        st.session_state.synthetic_dataset_details = {
+            "dataset_name": "Credit_Application_Data",
+            "source": "Internal CRM and historical loan records (synthetic generation)",
+            "collection_method": "Aggregated transactional and demographic data, anonymized",
+            "size": (10000, 7),
+            "features_desc": {
+                "Age": "Applicant's age (years)",
+                "Income": "Annual income (USD)",
+                "LoanAmount": "Requested loan amount (USD)",
+                "CreditScore": "Credit score from a third-party bureau",
+                "EmploymentStatus": "Categorical: Employed, Unemployed, Student, Retired",
+                "ResidentialStatus": "Categorical: Owner, Renter, Other",
+                "Defaulted": "Binary target: 1 if loan defaulted, 0 otherwise"
+            },
+            "sensitive_features": ["Age", "Income", "ResidentialStatus"],
+            "potential_biases": [
+                "Historical lending bias: Dataset shows lower approval rates for 'Renter' in specific income brackets.",
+                "Underrepresentation: Limited data for applicants under 25 or over 65.",
+                "Missing Data: Approximately 5% missing values in 'EmploymentStatus', imputed with mode.",
+                "CreditScore Lag: CreditScore data updated quarterly, may not reflect real-time creditworthiness."
+            ],
+            "preprocessing_steps": [
+                "Missing 'EmploymentStatus' values imputed using mode strategy.",
+                "Categorical features one-hot encoded.",
+                "Numerical features scaled using StandardScaler."
+            ]
         }
-        model_card["Known Limitations"] = [
-            "Potential for disparate impact on certain demographic groups due to historical data biases.",
-            "Performance may degrade with significant shifts in economic conditions not present in training data.",
-            "Limited interpretability for individual predictions (black-box nature of Gradient Boosting)."
-        ]
-        model_card["Developer"] = model_metadata["Development_Team"]
-        model_card["Last Review Date"] = "2024-03-15"
-        return model_card
-    st.session_state.credit_risk_model_card = populate_model_card(
-        st.session_state.credit_risk_model_scenario,
-        st.session_state.hypothetical_auc,
-        st.session_state.hypothetical_precision_at_recall
-    )
+    if 'credit_data_card' not in st.session_state:
+        data_card_template = {
+            "Dataset Name": None,
+            "Source": None,
+            "Collection Method": None,
+            "Size (rows, features)": None,
+            "Features Description": {},
+            "Sensitive Features": [],
+            "Potential Biases": [],
+            "Preprocessing Steps": [],
+            "Last Update Date": None
+        }
 
-if 'synthetic_dataset_details' not in st.session_state:
-    st.session_state.synthetic_dataset_details = {
-        "dataset_name": "Credit_Application_Data",
-        "source": "Internal CRM and historical loan records (synthetic generation)",
-        "collection_method": "Aggregated transactional and demographic data, anonymized",
-        "size": (10000, 7),
-        "features_desc": {
-            "Age": "Applicant's age (years)",
-            "Income": "Annual income (USD)",
-            "LoanAmount": "Requested loan amount (USD)",
-            "CreditScore": "Credit score from a third-party bureau",
-            "EmploymentStatus": "Categorical: Employed, Unemployed, Student, Retired",
-            "ResidentialStatus": "Categorical: Owner, Renter, Other",
-            "Defaulted": "Binary target: 1 if loan defaulted, 0 otherwise"
-        },
-        "sensitive_features": ["Age", "Income", "ResidentialStatus"],
-        "potential_biases": [
-            "Historical lending bias: Dataset shows lower approval rates for 'Renter' in specific income brackets.",
-            "Underrepresentation: Limited data for applicants under 25 or over 65.",
-            "Missing Data: Approximately 5% missing values in 'EmploymentStatus', imputed with mode.",
-            "CreditScore Lag: CreditScore data updated quarterly, may not reflect real-time creditworthiness."
-        ],
-        "preprocessing_steps": [
-            "Missing 'EmploymentStatus' values imputed using mode strategy.",
-            "Categorical features one-hot encoded.",
-            "Numerical features scaled using StandardScaler."
-        ]
-    }
-if 'credit_data_card' not in st.session_state:
-    data_card_template = {
-        "Dataset Name": None,
-        "Source": None,
-        "Collection Method": None,
-        "Size (rows, features)": None,
-        "Features Description": {},
-        "Sensitive Features": [],
-        "Potential Biases": [],
-        "Preprocessing Steps": [],
-        "Last Update Date": None
-    }
-
-    def populate_data_card(dataset_name, source, collection_method, size, features_desc, sensitive_features, potential_biases, preprocessing_steps):
-        data_card = data_card_template.copy()
-        data_card["Dataset Name"] = dataset_name
-        data_card["Source"] = source
-        data_card["Collection Method"] = collection_method
-        data_card["Size (rows, features)"] = size
-        data_card["Features Description"] = features_desc
-        data_card["Sensitive Features"] = sensitive_features
-        data_card["Potential Biases"] = potential_biases
-        data_card["Preprocessing Steps"] = preprocessing_steps
-        data_card["Last Update Date"] = "2024-03-10"
-        return data_card
-    st.session_state.credit_data_card = populate_data_card(
-        **st.session_state.synthetic_dataset_details)
+        def populate_data_card(dataset_name, source, collection_method, size, features_desc, sensitive_features, potential_biases, preprocessing_steps):
+            data_card = data_card_template.copy()
+            data_card["Dataset Name"] = dataset_name
+            data_card["Source"] = source
+            data_card["Collection Method"] = collection_method
+            data_card["Size (rows, features)"] = size
+            data_card["Features Description"] = features_desc
+            data_card["Sensitive Features"] = sensitive_features
+            data_card["Potential Biases"] = potential_biases
+            data_card["Preprocessing Steps"] = preprocessing_steps
+            data_card["Last Update Date"] = "2024-03-10"
+            return data_card
+        st.session_state.credit_data_card = populate_data_card(
+            **st.session_state.synthetic_dataset_details)
 
 
 # --- Helper functions for navigation (to be called from pages) ---
