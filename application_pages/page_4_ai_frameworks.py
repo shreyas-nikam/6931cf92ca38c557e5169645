@@ -34,11 +34,12 @@ def main():
 
     # Interactive Quiz Section
     st.markdown("---")
-    st.subheader("🎯 Interactive Knowledge Check: Understanding AI Risk Frameworks")
+    st.subheader(
+        "🎯 Interactive Knowledge Check: Understanding AI Risk Frameworks")
     st.markdown("""
     Test your understanding of SR 11-7 and NIST AI RMF frameworks. Select the correct option and see explanations for each choice.
     """)
-    
+
     # Initialize session state for quiz answers
     if 'framework_q1_answer' not in st.session_state:
         st.session_state.framework_q1_answer = None
@@ -50,9 +51,10 @@ def main():
         st.session_state.framework_q4_answer = None
     if 'framework_q5_answer' not in st.session_state:
         st.session_state.framework_q5_answer = None
-    
+
     # Question 1 - SR 11-7 Core Principles
-    st.markdown("**Question 1:** According to SR 11-7, which factors intensify model risk?")
+    st.markdown(
+        "**Question 1:** According to SR 11-7, which factors intensify model risk?")
     q1_options = [
         "Only the model's complexity",
         "Complexity, input uncertainty, extent of use, and potential impact",
@@ -60,7 +62,7 @@ def main():
         "Whether the model uses open-source libraries"
     ]
     q1_correct = 1
-    
+
     st.session_state.framework_q1_answer = st.radio(
         "Select your answer:",
         options=range(len(q1_options)),
@@ -68,7 +70,7 @@ def main():
         key="framework_q1",
         index=st.session_state.framework_q1_answer
     )
-    
+
     if st.button("Check Answer - Question 1", key="check_q1_framework"):
         if st.session_state.framework_q1_answer == q1_correct:
             st.success("✅ Correct!")
@@ -81,12 +83,14 @@ def main():
                 3: "Open-source vs. proprietary is not a risk factor in SR 11-7. The focus is on complexity, uncertainty, usage extent, and potential impact."
             }
             if st.session_state.framework_q1_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.framework_q1_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.framework_q1_answer]}")
+
     st.markdown("---")
-    
+
     # Question 2 - SR 11-7 Pillars
-    st.markdown("**Question 2:** What are the core pillars of Model Risk Management under SR 11-7?")
+    st.markdown(
+        "**Question 2:** What are the core pillars of Model Risk Management under SR 11-7?")
     q2_options = [
         "Development, Testing, Deployment, Retirement",
         "Model Development, Implementation, Validation, and Governance",
@@ -94,7 +98,7 @@ def main():
         "Design, Code, Test, Release"
     ]
     q2_correct = 1
-    
+
     st.session_state.framework_q2_answer = st.radio(
         "Select your answer:",
         options=range(len(q2_options)),
@@ -102,7 +106,7 @@ def main():
         key="framework_q2",
         index=st.session_state.framework_q2_answer
     )
-    
+
     if st.button("Check Answer - Question 2", key="check_q2_framework"):
         if st.session_state.framework_q2_answer == q2_correct:
             st.success("✅ Correct!")
@@ -115,10 +119,11 @@ def main():
                 3: "This describes a software development lifecycle, not SR 11-7's model risk management framework which emphasizes validation and governance."
             }
             if st.session_state.framework_q2_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.framework_q2_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.framework_q2_answer]}")
+
     st.markdown("---")
-    
+
     # Question 3 - SR 11-7 Model Risk Definition
     st.markdown("**Question 3:** How does SR 11-7 define model risk?")
     q3_options = [
@@ -128,7 +133,7 @@ def main():
         "The probability that a model's code contains bugs"
     ]
     q3_correct = 2
-    
+
     st.session_state.framework_q3_answer = st.radio(
         "Select your answer:",
         options=range(len(q3_options)),
@@ -136,7 +141,7 @@ def main():
         key="framework_q3",
         index=st.session_state.framework_q3_answer
     )
-    
+
     if st.button("Check Answer - Question 3", key="check_q3_framework"):
         if st.session_state.framework_q3_answer == q3_correct:
             st.success("✅ Correct!")
@@ -149,10 +154,11 @@ def main():
                 3: "Technical bugs are part of model risk, but the definition encompasses broader adverse consequences including misuse, not just coding errors."
             }
             if st.session_state.framework_q3_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.framework_q3_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.framework_q3_answer]}")
+
     st.markdown("---")
-    
+
     # Question 4 - NIST AI RMF Trustworthiness Attributes
     st.markdown("**Question 4:** Which NIST AI RMF attribute focuses on identifying and mitigating biases to ensure equitable outcomes?")
     q4_options = [
@@ -162,7 +168,7 @@ def main():
         "Accountability"
     ]
     q4_correct = 2
-    
+
     st.session_state.framework_q4_answer = st.radio(
         "Select your answer:",
         options=range(len(q4_options)),
@@ -170,7 +176,7 @@ def main():
         key="framework_q4",
         index=st.session_state.framework_q4_answer
     )
-    
+
     if st.button("Check Answer - Question 4", key="check_q4_framework"):
         if st.session_state.framework_q4_answer == q4_correct:
             st.success("✅ Correct!")
@@ -183,10 +189,11 @@ def main():
                 3: "Accountability establishes clear roles and oversight for AI decisions, but Fairness specifically addresses bias mitigation and equitable outcomes."
             }
             if st.session_state.framework_q4_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.framework_q4_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.framework_q4_answer]}")
+
     st.markdown("---")
-    
+
     # Question 5 - NIST AI RMF Comprehensive Application
     st.markdown("**Question 5:** For the Credit Risk Scoring Model's 'black-box nature' limitation, which NIST AI RMF attribute is MOST directly relevant?")
     q5_options = [
@@ -196,7 +203,7 @@ def main():
         "Reliability - ensuring consistent performance"
     ]
     q5_correct = 1
-    
+
     st.session_state.framework_q5_answer = st.radio(
         "Select your answer:",
         options=range(len(q5_options)),
@@ -204,7 +211,7 @@ def main():
         key="framework_q5",
         index=st.session_state.framework_q5_answer
     )
-    
+
     if st.button("Check Answer - Question 5", key="check_q5_framework"):
         if st.session_state.framework_q5_answer == q5_correct:
             st.success("✅ Correct!")
@@ -217,10 +224,11 @@ def main():
                 3: "Reliability ensures consistent performance over time, but doesn't address the ability to understand and explain individual predictions."
             }
             if st.session_state.framework_q5_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.framework_q5_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.framework_q5_answer]}")
+
     st.markdown("---")
-    
+
     # Bonus Scenario-Based Question
     st.markdown("**Bonus Question:** You discover the Credit Risk Scoring Model performs well overall (AUC=0.85) but has significantly lower precision for applicants under 25. Which framework attribute combination should you prioritize?")
     q6_options = [
@@ -230,10 +238,10 @@ def main():
         "Reliability and Safety only"
     ]
     q6_correct = 1
-    
+
     if 'framework_q6_answer' not in st.session_state:
         st.session_state.framework_q6_answer = None
-    
+
     st.session_state.framework_q6_answer = st.radio(
         "Select your answer:",
         options=range(len(q6_options)),
@@ -241,7 +249,7 @@ def main():
         key="framework_q6",
         index=st.session_state.framework_q6_answer
     )
-    
+
     if st.button("Check Answer - Bonus Question", key="check_q6_framework"):
         if st.session_state.framework_q6_answer == q6_correct:
             st.success("✅ Correct!")
@@ -254,7 +262,8 @@ def main():
                 3: "Reliability is about consistency over time. This is about accuracy differences across groups (validity) and equitable treatment (fairness)."
             }
             if st.session_state.framework_q6_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.framework_q6_answer]}")
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.framework_q6_answer]}")
 
     st.markdown("---")
 

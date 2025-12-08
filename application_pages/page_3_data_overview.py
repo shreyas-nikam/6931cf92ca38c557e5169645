@@ -16,14 +16,14 @@ def main():
     st.markdown("""
     The Data Card clearly outlines the dataset's characteristics and, critically, highlights potential biases and data quality issues. As a Risk Manager, you note the "Historical lending bias" and "Underrepresentation" as immediate red flags for fairness, while "Missing Data" and "CreditScore Lag" point to accuracy and reliability concerns. This information directly informs the data-related risks you'll formally document in the risk register.
     """)
-    
+
     # Interactive Quiz Section
     st.markdown("---")
     st.subheader("🎯 Interactive Knowledge Check: Understanding the Data Card")
     st.markdown("""
     Test your understanding of the Data Card and its implications for AI risk assessment. Select the correct option and see explanations for each choice.
     """)
-    
+
     # Initialize session state for quiz answers
     if 'data_q1_answer' not in st.session_state:
         st.session_state.data_q1_answer = None
@@ -31,9 +31,10 @@ def main():
         st.session_state.data_q2_answer = None
     if 'data_q3_answer' not in st.session_state:
         st.session_state.data_q3_answer = None
-    
+
     # Question 1
-    st.markdown("**Question 1:** Which data quality issue poses the GREATEST risk for real-time lending decisions?")
+    st.markdown(
+        "**Question 1:** Which data quality issue poses the GREATEST risk for real-time lending decisions?")
     q1_options = [
         "Missing 5% of EmploymentStatus values",
         "CreditScore data updated quarterly (lags real-time creditworthiness)",
@@ -41,7 +42,7 @@ def main():
         "Dataset has 10,000 rows"
     ]
     q1_correct = 1
-    
+
     st.session_state.data_q1_answer = st.radio(
         "Select your answer:",
         options=range(len(q1_options)),
@@ -49,7 +50,7 @@ def main():
         key="data_q1",
         index=st.session_state.data_q1_answer
     )
-    
+
     if st.button("Check Answer - Question 1", key="check_q1_data"):
         if st.session_state.data_q1_answer == q1_correct:
             st.success("✅ Correct!")
@@ -62,10 +63,11 @@ def main():
                 3: "Dataset size of 10,000 is reasonable for this use case and not inherently risky. The lag in credit scores is a more pressing concern."
             }
             if st.session_state.data_q1_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.data_q1_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.data_q1_answer]}")
+
     st.markdown("---")
-    
+
     # Question 2
     st.markdown("**Question 2:** The Data Card identifies 'Historical lending bias' showing lower approval rates for 'Renter' status in specific income brackets. What type of AI risk does this primarily represent?")
     q2_options = [
@@ -75,7 +77,7 @@ def main():
         "Data Privacy Risk"
     ]
     q2_correct = 1
-    
+
     st.session_state.data_q2_answer = st.radio(
         "Select your answer:",
         options=range(len(q2_options)),
@@ -83,7 +85,7 @@ def main():
         key="data_q2",
         index=st.session_state.data_q2_answer
     )
-    
+
     if st.button("Check Answer - Question 2", key="check_q2_data"):
         if st.session_state.data_q2_answer == q2_correct:
             st.success("✅ Correct!")
@@ -96,12 +98,14 @@ def main():
                 3: "Data privacy relates to protecting personal information. While important, the bias issue is about fairness in decision-making, not privacy protection."
             }
             if st.session_state.data_q2_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.data_q2_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.data_q2_answer]}")
+
     st.markdown("---")
-    
+
     # Question 3
-    st.markdown("**Question 3:** Why are 'Age', 'Income', and 'ResidentialStatus' identified as 'Sensitive Features'?")
+    st.markdown(
+        "**Question 3:** Why are 'Age', 'Income', and 'ResidentialStatus' identified as 'Sensitive Features'?")
     q3_options = [
         "They are encrypted in the database",
         "They may correlate with protected demographic characteristics and require fairness monitoring",
@@ -109,7 +113,7 @@ def main():
         "They contain personally identifiable information (PII)"
     ]
     q3_correct = 1
-    
+
     st.session_state.data_q3_answer = st.radio(
         "Select your answer:",
         options=range(len(q3_options)),
@@ -117,7 +121,7 @@ def main():
         key="data_q3",
         index=st.session_state.data_q3_answer
     )
-    
+
     if st.button("Check Answer - Question 3", key="check_q3_data"):
         if st.session_state.data_q3_answer == q3_correct:
             st.success("✅ Correct!")
@@ -130,12 +134,14 @@ def main():
                 3: "While these may be PII, 'sensitive features' in AI risk assessment specifically refers to features that could lead to unfair or discriminatory outcomes, not just data privacy concerns."
             }
             if st.session_state.data_q3_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.data_q3_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.data_q3_answer]}")
+
     st.markdown("---")
-    
+
     # Bonus Question
-    st.markdown("**Bonus Question:** What is the significance of documenting 'Underrepresentation' of applicants under 25 or over 65?")
+    st.markdown(
+        "**Bonus Question:** What is the significance of documenting 'Underrepresentation' of applicants under 25 or over 65?")
     q4_options = [
         "It's just a statistical observation with no practical implications",
         "The model may perform poorly or unfairly for these age groups due to insufficient training examples",
@@ -143,10 +149,10 @@ def main():
         "It means the bank doesn't want these customers"
     ]
     q4_correct = 1
-    
+
     if 'data_q4_answer' not in st.session_state:
         st.session_state.data_q4_answer = None
-    
+
     st.session_state.data_q4_answer = st.radio(
         "Select your answer:",
         options=range(len(q4_options)),
@@ -154,7 +160,7 @@ def main():
         key="data_q4",
         index=st.session_state.data_q4_answer
     )
-    
+
     if st.button("Check Answer - Bonus Question", key="check_q4_data"):
         if st.session_state.data_q4_answer == q4_correct:
             st.success("✅ Correct!")
@@ -167,8 +173,9 @@ def main():
                 3: "This is about data collection and historical patterns, not business preference. The concern is ensuring fair treatment despite limited training data."
             }
             if st.session_state.data_q4_answer in explanations:
-                st.info(f"**Explanation:** {explanations[st.session_state.data_q4_answer]}")
-    
+                st.info(
+                    f"**Explanation:** {explanations[st.session_state.data_q4_answer]}")
+
     st.markdown("---")
 
     col1, col2 = st.columns([1, 1])
