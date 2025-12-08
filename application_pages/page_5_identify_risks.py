@@ -45,6 +45,8 @@ def main():
                              description="Lack of a comprehensive incident response plan for AI model failures (e.g., severe drift, bias detection) could delay remediation and amplify negative impact, violating Safety and Accountability.")
         add_risk_to_register(dimension="Organizational", category="Responsible AI Culture",
                              description="Insufficient training or awareness programs for employees on responsible AI use and emergent risks could lead to poor operational practices, violating Accountability.")
+        st.success(
+            "Initial risks have been pre-populated into the AI Risk Register.")
 
     st.subheader("Current AI Risk Register")
     if not st.session_state.risk_register_df.empty:

@@ -171,7 +171,6 @@ def add_risk_to_register(dimension, category, description, potential_impact="Med
     st.session_state.risk_register_df = pd.concat(
         [st.session_state.risk_register_df, pd.DataFrame([new_risk])], ignore_index=True)
     st.session_state.next_risk_id += 1
-    st.success(f"Risk {new_risk['Risk ID']} added successfully!")
 
 
 def assess_risk_severity(risk_id, potential_impact, likelihood):
