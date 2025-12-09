@@ -10,8 +10,63 @@ def main():
     """)
     st.subheader("Data Card: Credit Application Data")
 
-    # Display data card with appropriate formatting
-    st.json(st.session_state.credit_data_card)
+    # Display data card inside a container for card-like appearance
+    with st.container(border=True):
+        # Basic Information Section
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown("**Dataset Name:**")
+            st.markdown("Credit_Application_Data")
+            st.markdown("**Source:**")
+            st.markdown(
+                "Internal CRM and historical loan records (synthetic generation)")
+            st.markdown("**Collection Method:**")
+            st.markdown(
+                "Aggregated transactional and demographic data, anonymized")
+
+        with col2:
+            st.markdown("**Last Update Date:**")
+            st.markdown("2024-03-10")
+            st.markdown("**Dataset Size:**")
+            st.markdown("10,000 rows × 7 features")
+            st.markdown("**Sensitive Features:**")
+            st.markdown("Age, Income, ResidentialStatus")
+
+        # Features Description
+        st.markdown("**Features Description:**")
+        feature_col1, feature_col2 = st.columns(2)
+        with feature_col1:
+            st.markdown("""
+            - **Age:** Applicant's age (years)
+            - **Income:** Annual income (USD)
+            - **LoanAmount:** Requested loan amount (USD)
+            - **CreditScore:** Credit score from a third-party bureau
+            """)
+        with feature_col2:
+            st.markdown("""
+            - **EmploymentStatus:** Categorical: Employed, Unemployed, Student, Retired
+            - **ResidentialStatus:** Categorical: Owner, Renter, Other
+            - **Defaulted:** Binary target: 1 if loan defaulted, 0 otherwise
+            """)
+
+        # Preprocessing Steps
+        st.markdown("**Preprocessing Steps:**")
+        with st.expander("View preprocessing details", expanded=False):
+            st.markdown("""
+            1. Missing 'EmploymentStatus' values imputed using mode strategy
+            2. Categorical features one-hot encoded
+            3. Numerical features scaled using StandardScaler
+            """)
+
+        # Potential Biases and Data Quality Issues
+        st.markdown("**Potential Biases & Data Quality Issues:**")
+        with st.expander("⚠️ Click to view identified issues", expanded=True):
+            st.markdown("""
+            1. **Historical Lending Bias:** Dataset shows lower approval rates for 'Renter' in specific income brackets.
+            2. **Underrepresentation:** Limited data for applicants under 25 or over 65.
+            3. **Missing Data:** Approximately 5% missing values in 'EmploymentStatus', imputed with mode.
+            4. **CreditScore Lag:** CreditScore data updated quarterly, may not reflect real-time creditworthiness.
+            """)
 
     st.markdown("""
     The Data Card clearly outlines the dataset's characteristics and, critically, highlights potential biases and data quality issues. As a Risk Manager, you note the "Historical lending bias" and "Underrepresentation" as immediate red flags for fairness, while "Missing Data" and "CreditScore Lag" point to accuracy and reliability concerns. This information directly informs the data-related risks you'll formally document in the risk register.

@@ -22,14 +22,56 @@ def main():
     """)
     st.subheader("AI Model Card: Credit Risk Scoring Model")
 
-    # Display model card with appropriate formatting
-    model_card_display = st.session_state.credit_risk_model_card.copy()
-    model_card_display["Key Performance Metrics"] = {
-        "AUC": f"{st.session_state.hypothetical_auc:.2f}",
-        "Precision@90%Recall": f"{st.session_state.hypothetical_precision_at_recall:.2f}",
-        "Target Variable": "Defaulted (Binary: 1 for default, 0 for no default)"
-    }
-    st.json(model_card_display)
+    # Display model card with better formatting using Streamlit components
+
+    # Basic Information Section
+    with st.container(border=True):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown("**Model Name:**")
+            st.markdown("Credit Risk Scoring Model v1.0")
+            st.markdown("**Version:**")
+            st.markdown("1.0")
+            st.markdown("**Algorithm:**")
+            st.markdown("Gradient Boosting Classifier (e.g., LightGBM)")
+
+        with col2:
+            st.markdown("**Developer:**")
+            st.markdown("QuantBank Data Science Department")
+            st.markdown("**Last Review Date:**")
+            st.markdown("2024-03-15")
+            st.markdown("**Target Variable:**")
+            st.markdown("Defaulted (Binary: 1 for default, 0 for no default)")
+
+        # Purpose and Intended Use
+        st.markdown("**Purpose:**")
+        st.write(
+            "To predict the likelihood of loan default for retail loan applicants.")
+
+        st.markdown("**Intended Use:**")
+        st.write(
+            "Automate approval for low-risk applicants and flag high-risk applicants for manual underwriting review.")
+
+        # Key Performance Metrics
+        st.markdown("**Key Performance Metrics:**")
+        metric_col1, metric_col2, metric_col3 = st.columns(3)
+        with metric_col1:
+            st.metric(
+                label="AUC", value=f"{st.session_state.hypothetical_auc:.2f}")
+        with metric_col2:
+            st.metric(label="Precision @ 90% Recall",
+                      value=f"{st.session_state.hypothetical_precision_at_recall:.2f}")
+        with metric_col3:
+            st.metric(label="Model Type", value="Binary Classifier")
+
+        # Known Limitations
+        st.markdown("**Known Limitations:**")
+        with st.expander("Click to view limitations", expanded=True):
+            st.markdown("""
+            1. **Potential Bias:** Potential for disparate impact on certain demographic groups due to historical data biases.
+            2. **Economic Sensitivity:** Performance may degrade with significant shifts in economic conditions not present in training data.
+            3. **Interpretability:** Limited interpretability for individual predictions (black-box nature of Gradient Boosting).
+            """)
 
     st.markdown(r"""
     The generated Model Card provides a structured summary. As a Risk Manager, you immediately see the model's purpose, algorithm, and crucial performance indicators (AUC: $0.85$, Precision@90%Recall: $0.60$). Importantly, the "Known Limitations" section proactively highlights areas of concern like potential bias and performance degradation, which will be central to your risk identification process. This artifact serves as a single source of truth for the model's core information.
